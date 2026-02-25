@@ -23,10 +23,10 @@ CREATE TABLE Player (
 
 -- 2. Card
 CREATE TABLE Card (
-    card_id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
+    card_id INT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
     elixir_cost INT NOT NULL,
-    rarity VARCHAR(255) NOT NULL,
+    rarity VARCHAR(20) CHECK (rarity IN ('Common', 'Rare', 'Epic', 'Legendary', 'Champion')),
     type VARCHAR(20) CHECK (type IN ('Troop', 'Spell', 'Building', 'Tower Troop'))
 );
 
