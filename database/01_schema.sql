@@ -32,7 +32,7 @@ CREATE TABLE Card (
 
 -- 3. CardVariant (1 Card has 1..3 variants)
 CREATE TABLE CardVariant (
-    variant_id SERIAL PRIMARY KEY,
+    variant_id INT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     variant_type VARCHAR(255) CHECK (variant_type IN ('Normal', 'Evolution', 'Hero')),
     card_id INT NOT NULL,
