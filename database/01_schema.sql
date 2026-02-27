@@ -1,3 +1,10 @@
+--------------- Views Drops (Correct Order) ---------------
+
+DROP VIEW IF EXISTS v_player_ranking CASCADE;
+DROP VIEW IF EXISTS v_player_stats_pct CASCADE;
+DROP VIEW IF EXISTS v_deck_winrate_min5 CASCADE;
+DROP VIEW IF EXISTS v_cardvariant_rates CASCADE;
+
 --------------- Table Drops (Correct Order) ---------------
 -- We drop junction/child tables first to avoid dependency errors
 DROP TABLE IF EXISTS Card_CardCategory CASCADE;
@@ -10,6 +17,9 @@ DROP TABLE IF EXISTS Card CASCADE;
 DROP TABLE IF EXISTS CardCategory CASCADE;
 DROP TABLE IF EXISTS Deck CASCADE;
 DROP TABLE IF EXISTS Player CASCADE;
+DROP TABLE IF EXISTS CardVariantStats CASCADE;
+DROP TABLE IF EXISTS PlayerStats CASCADE;
+DROP TABLE IF EXISTS DeckStats CASCADE;
 --------------- End of Drops --------------
 
 ----------------- Table Creation ---------------
@@ -67,6 +77,7 @@ CREATE TABLE CRGame (
     match_id INT NOT NULL,
     player1_deck_id INT,
     player2_deck_id INT,
+    stats_processed BOOLEAN NOT NULL DEFAULT FALSE,
     FOREIGN KEY (match_id) REFERENCES Match(match_id) ON DELETE CASCADE,
     FOREIGN KEY (winner_player_id) REFERENCES Player(player_id),
     FOREIGN KEY (player1_deck_id) REFERENCES Deck(deck_id),
@@ -101,6 +112,25 @@ CREATE TABLE Match_Player (
     match_id INT REFERENCES Match(match_id) ON DELETE CASCADE,
     player_id INT REFERENCES Player(player_id) ON DELETE CASCADE,
     PRIMARY KEY (match_id, player_id)
+);
+
+CREATE TABLE CardVariantStats (
+  variant_id INT PRIMARY KEY REFERENCES CardVariant(variant_id) ON DELETE CASCADE,
+  uses INT NOT NULL DEFAULT 0 CHECK (uses >= 0),
+  wins INT NOT NULL DEFAULT 0 CHECK (wins >= 0)
+);
+
+CREATE TABLE PlayerStats (
+  player_id INT PRIMARY KEY REFERENCES Player(player_id) ON DELETE CASCADE,
+  games INT NOT NULL DEFAULT 0 CHECK (games >= 0),
+  wins INT NOT NULL DEFAULT 0 CHECK (wins >= 0),
+  crowns INT NOT NULL DEFAULT 0 CHECK (crowns >= 0)
+);
+
+CREATE TABLE DeckStats (
+  deck_id INT PRIMARY KEY REFERENCES Deck(deck_id) ON DELETE CASCADE,
+  games INT NOT NULL DEFAULT 0 CHECK (games >= 0),
+  wins INT NOT NULL DEFAULT 0 CHECK (wins >= 0)
 );
 
 ---------------- End of Table Creation ---------------
